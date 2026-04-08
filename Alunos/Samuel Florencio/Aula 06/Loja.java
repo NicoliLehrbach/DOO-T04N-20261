@@ -28,8 +28,9 @@ public class Loja {
 		for ( Vendedor v : vendedores) {
 			if(v.nome.equalsIgnoreCase(nome)) {
 				v.apresentar();
+				System.out.println("Salario recebido: "+v.atualizarSalario(true));
 				System.out.println("Média: " + v.calcularMedia());
-				System.out.println("Bonus: " + v.calcularBonus());
+				System.out.println("Bonus: \n" + v.calcularBonus());
 				encontrado = true;
 				break;
 
@@ -45,13 +46,13 @@ public class Loja {
 		for (Cliente c : clientes) {
 			if(c.nome.equalsIgnoreCase(nome)) {
 				c.apresentar();
+				encontrado = true;
 				break;
 			}
-			c.apresentar();
-		}	
-		if (!encontrado) {
-			System.out.println("Cliente não encontrado");
 		}
+		if(!encontrado) {
+			System.out.println("Cliente não encontrado");
+			}	
 	}
 	public void listarVendedor(){
 		System.out.println("Vendedores disponiveis: ");

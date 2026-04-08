@@ -7,6 +7,6 @@ public class Cliente {
 	public void apresentar() {
 		System.out.println("Cliente: "+ nome);
 		System.out.println("Idade: "+ idade);
-		System.out.println("Cidade: "+cidade+",  Bairro: "+bairro+",  Rua: "+rua+".");
+		System.out.println("Cidade: "+cidade+",  Bairro: "+bairro+",  Rua: "+rua+".\n");
 	}
 }
