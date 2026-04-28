@@ -54,7 +54,7 @@ public class Aula04 {
 
         do {
             exibirMenu();
-            System.out.print("Escolha uma opção: ");
+            System.out.print("Escolha uma op??o: ");
             opcao = scanner.nextInt();
 
             switch (opcao) {
@@ -77,7 +77,7 @@ public class Aula04 {
                     System.out.println("Encerrando a calculadora. Obrigada pela visita!");
                     break;
                 default:
-                    System.out.println("Opção inválida. Tente novamente.");
+                    System.out.println("Op??o inv?lida. Tente novamente.");
             }
         } while (opcao != 6);
 
@@ -87,11 +87,11 @@ public class Aula04 {
    
     private static void exibirMenu() {
         System.out.println("\n== Loja de Plantas da Dona Gabrielinha ==");
-        System.out.println("[1] - Calcular Preço Total");
+        System.out.println("[1] - Calcular Pre?o Total");
         System.out.println("[2] - Calcular Troco");
         System.out.println("[3] - Ver Registro de Vendas");
         System.out.println("[4] - Calcular Quantidade Total de Vendas em um Dia");
-        System.out.println("[5] - Buscar Quantidade Total pelo Mês e Dia");
+        System.out.println("[5] - Buscar Quantidade Total pelo M?s e Dia");
         System.out.println("[6] - Sair");
     }
 
@@ -99,7 +99,7 @@ public class Aula04 {
     private static void calcularPrecoTotal(Scanner scanner) {
         System.out.print("Quantidade vendida: ");
         double quantidade = scanner.nextDouble();
-        System.out.print("Preço unitário: R$ ");
+        System.out.print("Pre?o unit?rio: R$ ");
         double precoUnitario = scanner.nextDouble();
 
         double totalSemDesconto = quantidade * precoUnitario;
@@ -112,7 +112,7 @@ public class Aula04 {
             System.out.printf("Desconto especial aplicado: R$ %.2f\n", desconto);
         }
 
-        System.out.printf("Preço total da venda: R$ %.2f\n", totalComDesconto);
+        System.out.printf("Pre?o total da venda: R$ %.2f\n", totalComDesconto);
 
         Venda venda = new Venda(quantidade, precoUnitario, desconto, totalComDesconto, LocalDate.now());
         registroDeVendas.add(venda);
@@ -144,7 +144,7 @@ public class Aula04 {
                 Venda venda = registroDeVendas.get(i);
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 String dataFormatada = venda.getData().format(formatter);
-                System.out.printf("Venda %d: Data: %s, Quantidade: %.0f, Preço Unitário: R$ %.2f, Desconto: R$ %.2f, Total: R$ %.2f\n",
+                System.out.printf("Venda %d: Data: %s, Quantidade: %.0f, Pre?o Unit?rio: R$ %.2f, Desconto: R$ %.2f, Total: R$ %.2f\n",
                         i + 1, dataFormatada, venda.getQuantidade(), venda.getPrecoUnitario(), venda.getDesconto(), venda.getTotal());
             }
         }
@@ -168,7 +168,7 @@ public class Aula04 {
     private static void calcularQuantidadeTotalDiaMenu(Scanner scanner) {
         System.out.print("Ano: ");
         int ano = scanner.nextInt();
-        System.out.print("Mês: ");
+        System.out.print("M?s: ");
         int mes = scanner.nextInt();
         System.out.print("Dia: ");
         int dia = scanner.nextInt();
@@ -178,7 +178,7 @@ public class Aula04 {
     }
 
     private static void buscarQuantidadeTotalMesDiaMenu(Scanner scanner) {
-        System.out.print("Mês: ");
+        System.out.print("M?s: ");
         int mes = scanner.nextInt();
         System.out.print("Dia: ");
         int dia = scanner.nextInt();
