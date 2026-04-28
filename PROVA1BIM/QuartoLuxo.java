@@ -1,4 +1,4 @@
-public class QuartoLuxo extends Quarto {
+public class QuartoLuxo extends Quarto { //quarto de luxo do hotel
     private boolean temVaranda;
 
     public QuartoLuxo(int numero, double valorDiaria, boolean temVaranda) {
