@@ -1,0 +1,323 @@
+<html>
+<head>
+<title>TelaListas.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #2aacb8;}
+.s4 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+TelaListas.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">view</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">controller</span><span class="s2">.</span><span class="s1">UsuarioController</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">model</span><span class="s2">.</span><span class="s1">Serie</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">javax</span><span class="s2">.</span><span class="s1">swing</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">awt</span><span class="s2">.*;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">List</span><span class="s2">;</span>
+
+<span class="s0">public class </span><span class="s1">TelaListas </span><span class="s0">extends </span><span class="s1">JFrame </span><span class="s2">{</span>
+    <span class="s0">private final </span><span class="s1">UsuarioController usuarioController</span><span class="s2">;</span>
+
+    <span class="s0">private </span><span class="s1">JTabbedPane abasCategorias</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">JList</span><span class="s2">&lt;</span><span class="s1">Serie</span><span class="s2">&gt; </span><span class="s1">listaFavoritos</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">JList</span><span class="s2">&lt;</span><span class="s1">Serie</span><span class="s2">&gt; </span><span class="s1">listaAssistidas</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">JList</span><span class="s2">&lt;</span><span class="s1">Serie</span><span class="s2">&gt; </span><span class="s1">listaQueroAssistir</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">DefaultListModel</span><span class="s2">&lt;</span><span class="s1">Serie</span><span class="s2">&gt; </span><span class="s1">modeloFav</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">DefaultListModel</span><span class="s2">&lt;</span><span class="s1">Serie</span><span class="s2">&gt; </span><span class="s1">modeloAssis</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">DefaultListModel</span><span class="s2">&lt;</span><span class="s1">Serie</span><span class="s2">&gt; </span><span class="s1">modeloQuero</span><span class="s2">;</span>
+    <span class="s0">private </span><span class="s1">JLabel labelStatus</span><span class="s2">;</span>
+
+    <span class="s0">public </span><span class="s1">TelaListas</span><span class="s2">(</span><span class="s1">UsuarioController usuarioController</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">usuarioController </span><span class="s2">= </span><span class="s1">usuarioController</span><span class="s2">;</span>
+        <span class="s1">configurarJanela</span><span class="s2">();</span>
+        <span class="s1">construirInterfaceGrafica</span><span class="s2">();</span>
+        <span class="s1">sincronizarListasInterface</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">configurarJanela</span><span class="s2">() {</span>
+        <span class="s1">setSize</span><span class="s2">(</span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">TAMANHO_PADRAO_VIEW</span><span class="s2">);</span>
+        <span class="s1">setDefaultCloseOperation</span><span class="s2">(</span><span class="s1">JFrame</span><span class="s2">.</span><span class="s1">EXIT_ON_CLOSE</span><span class="s2">);</span>
+        <span class="s1">setLocationRelativeTo</span><span class="s2">(</span><span class="s0">null</span><span class="s2">);</span>
+        <span class="s1">setResizable</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">construirInterfaceGrafica</span><span class="s2">() {</span>
+        <span class="s1">JPanel painelPrincipal </span><span class="s2">= </span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">criarPainelBase</span><span class="s2">();</span>
+        <span class="s1">painelPrincipal</span><span class="s2">.</span><span class="s1">setLayout</span><span class="s2">(</span><span class="s0">new </span><span class="s1">BorderLayout</span><span class="s2">());</span>
+
+        <span class="s1">JPanel cardPrincipal </span><span class="s2">= </span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">criarCardPrincipal</span><span class="s2">();</span>
+        <span class="s1">cardPrincipal</span><span class="s2">.</span><span class="s1">setLayout</span><span class="s2">(</span><span class="s0">new </span><span class="s1">BorderLayout</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">16</span><span class="s2">));</span>
+
+        <span class="s1">cardPrincipal</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">criarCabecalho</span><span class="s2">(), </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">NORTH</span><span class="s2">);</span>
+        <span class="s1">cardPrincipal</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">criarConteudoListas</span><span class="s2">(), </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">cardPrincipal</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">criarRodapeAcoes</span><span class="s2">(), </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">SOUTH</span><span class="s2">);</span>
+
+        <span class="s1">painelPrincipal</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">cardPrincipal</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">add</span><span class="s2">(</span><span class="s1">painelPrincipal</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private </span><span class="s1">JPanel criarCabecalho</span><span class="s2">() {</span>
+        <span class="s1">JPanel painelCabecalho </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">(</span><span class="s0">new </span><span class="s1">BorderLayout</span><span class="s2">());</span>
+        <span class="s1">painelCabecalho</span><span class="s2">.</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+
+        <span class="s1">JPanel painelTitulo </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">();</span>
+        <span class="s1">painelTitulo</span><span class="s2">.</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+        <span class="s1">painelTitulo</span><span class="s2">.</span><span class="s1">setLayout</span><span class="s2">(</span><span class="s0">new </span><span class="s1">BoxLayout</span><span class="s2">(</span><span class="s1">painelTitulo</span><span class="s2">, </span><span class="s1">BoxLayout</span><span class="s2">.</span><span class="s1">Y_AXIS</span><span class="s2">));</span>
+
+        <span class="s1">JLabel titulo </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s4">&quot;Minhas Listas Personalizadas&quot;</span><span class="s2">);</span>
+        <span class="s1">titulo</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Font</span><span class="s2">(</span><span class="s4">&quot;Segoe UI&quot;</span><span class="s2">, </span><span class="s1">Font</span><span class="s2">.</span><span class="s1">BOLD</span><span class="s2">, </span><span class="s3">24</span><span class="s2">));</span>
+        <span class="s1">titulo</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_TEXTO_MAIN</span><span class="s2">);</span>
+
+        <span class="s1">JLabel instrucao </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s4">&quot;Gerencie, ordene e explore suas séries arquivadas.&quot;</span><span class="s2">);</span>
+        <span class="s1">instrucao</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Font</span><span class="s2">(</span><span class="s4">&quot;Segoe UI&quot;</span><span class="s2">, </span><span class="s1">Font</span><span class="s2">.</span><span class="s1">PLAIN</span><span class="s2">, </span><span class="s3">14</span><span class="s2">));</span>
+        <span class="s1">instrucao</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_TEXTO_MUTED</span><span class="s2">);</span>
+
+        <span class="s1">painelTitulo</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">titulo</span><span class="s2">);</span>
+        <span class="s1">painelTitulo</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">Box</span><span class="s2">.</span><span class="s1">createVerticalStrut</span><span class="s2">(</span><span class="s3">4</span><span class="s2">));</span>
+        <span class="s1">painelTitulo</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">instrucao</span><span class="s2">);</span>
+
+        <span class="s1">JButton voltar </span><span class="s2">= </span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">criarBotaoClaro</span><span class="s2">(</span><span class="s4">&quot;Voltar ao Menu&quot;</span><span class="s2">, </span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_TEXTO_MAIN</span><span class="s2">);</span>
+        <span class="s1">voltar</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; voltarAoMenuPrincipal</span><span class="s2">());</span>
+
+        <span class="s1">painelCabecalho</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">painelTitulo</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">painelCabecalho</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">voltar</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">EAST</span><span class="s2">);</span>
+        <span class="s0">return </span><span class="s1">painelCabecalho</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private </span><span class="s1">JPanel criarConteudoListas</span><span class="s2">() {</span>
+        <span class="s1">JPanel conteudo </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">(</span><span class="s0">new </span><span class="s1">BorderLayout</span><span class="s2">(</span><span class="s3">0</span><span class="s2">, </span><span class="s3">16</span><span class="s2">));</span>
+        <span class="s1">conteudo</span><span class="s2">.</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+
+        <span class="s1">conteudo</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">criarAbasListas</span><span class="s2">(), </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s1">conteudo</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">criarPainelAcoesHorizontal</span><span class="s2">(), </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">SOUTH</span><span class="s2">);</span>
+        <span class="s0">return </span><span class="s1">conteudo</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private </span><span class="s1">JPanel criarPainelAcoesHorizontal</span><span class="s2">() {</span>
+        <span class="s1">JPanel painel </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">(</span><span class="s0">new </span><span class="s1">BorderLayout</span><span class="s2">(</span><span class="s3">16</span><span class="s2">, </span><span class="s3">0</span><span class="s2">));</span>
+        <span class="s1">painel</span><span class="s2">.</span><span class="s1">setBackground</span><span class="s2">(</span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_SUAVE</span><span class="s2">);</span>
+        <span class="s1">painel</span><span class="s2">.</span><span class="s1">setBorder</span><span class="s2">(</span><span class="s1">BorderFactory</span><span class="s2">.</span><span class="s1">createEmptyBorder</span><span class="s2">(</span><span class="s3">12</span><span class="s2">, </span><span class="s3">16</span><span class="s2">, </span><span class="s3">12</span><span class="s2">, </span><span class="s3">16</span><span class="s2">));</span>
+
+        <span class="s1">JPanel painelOrdenacao </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">(</span><span class="s0">new </span><span class="s1">FlowLayout</span><span class="s2">(</span><span class="s1">FlowLayout</span><span class="s2">.</span><span class="s1">LEFT</span><span class="s2">, </span><span class="s3">8</span><span class="s2">, </span><span class="s3">0</span><span class="s2">));</span>
+        <span class="s1">painelOrdenacao</span><span class="s2">.</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+
+        <span class="s1">JLabel lblOrdenar </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s4">&quot;Ordenar:&quot;</span><span class="s2">);</span>
+        <span class="s1">lblOrdenar</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Font</span><span class="s2">(</span><span class="s4">&quot;Segoe UI&quot;</span><span class="s2">, </span><span class="s1">Font</span><span class="s2">.</span><span class="s1">BOLD</span><span class="s2">, </span><span class="s3">13</span><span class="s2">));</span>
+        <span class="s1">lblOrdenar</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_TEXTO_MAIN</span><span class="s2">);</span>
+        <span class="s1">painelOrdenacao</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">lblOrdenar</span><span class="s2">);</span>
+
+        <span class="s1">JButton btnNome </span><span class="s2">= </span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">criarBotaoClaro</span><span class="s2">(</span><span class="s4">&quot;Nome A-Z&quot;</span><span class="s2">, </span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_TEXTO_MAIN</span><span class="s2">);</span>
+        <span class="s1">JButton btnNota </span><span class="s2">= </span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">criarBotaoClaro</span><span class="s2">(</span><span class="s4">&quot;Nota&quot;</span><span class="s2">, </span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_TEXTO_MAIN</span><span class="s2">);</span>
+        <span class="s1">JButton btnStatus </span><span class="s2">= </span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">criarBotaoClaro</span><span class="s2">(</span><span class="s4">&quot;Status&quot;</span><span class="s2">, </span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_TEXTO_MAIN</span><span class="s2">);</span>
+        <span class="s1">JButton btnData </span><span class="s2">= </span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">criarBotaoClaro</span><span class="s2">(</span><span class="s4">&quot;Estreia&quot;</span><span class="s2">, </span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_TEXTO_MAIN</span><span class="s2">);</span>
+
+        <span class="s1">btnNome</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; dispararOrdenacao</span><span class="s2">(</span><span class="s4">&quot;nome&quot;</span><span class="s2">));</span>
+        <span class="s1">btnNota</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; dispararOrdenacao</span><span class="s2">(</span><span class="s4">&quot;nota&quot;</span><span class="s2">));</span>
+        <span class="s1">btnStatus</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; dispararOrdenacao</span><span class="s2">(</span><span class="s4">&quot;status&quot;</span><span class="s2">));</span>
+        <span class="s1">btnData</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; dispararOrdenacao</span><span class="s2">(</span><span class="s4">&quot;data&quot;</span><span class="s2">));</span>
+
+        <span class="s1">painelOrdenacao</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">btnNome</span><span class="s2">);</span>
+        <span class="s1">painelOrdenacao</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">btnNota</span><span class="s2">);</span>
+        <span class="s1">painelOrdenacao</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">btnStatus</span><span class="s2">);</span>
+        <span class="s1">painelOrdenacao</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">btnData</span><span class="s2">);</span>
+
+        <span class="s1">JPanel painelGerenciar </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">(</span><span class="s0">new </span><span class="s1">FlowLayout</span><span class="s2">(</span><span class="s1">FlowLayout</span><span class="s2">.</span><span class="s1">RIGHT</span><span class="s2">, </span><span class="s3">8</span><span class="s2">, </span><span class="s3">0</span><span class="s2">));</span>
+        <span class="s1">painelGerenciar</span><span class="s2">.</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+
+        <span class="s1">JButton botaoVerDetalhes </span><span class="s2">= </span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">criarBotaoEstilizado</span><span class="s2">(</span><span class="s4">&quot;Ver Detalhes&quot;</span><span class="s2">, </span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_DESTAQUE</span><span class="s2">);</span>
+        <span class="s1">JButton botaoRemover </span><span class="s2">= </span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">criarBotaoEstilizado</span><span class="s2">(</span><span class="s4">&quot;Remover Item&quot;</span><span class="s2">, </span><span class="s0">new </span><span class="s1">Color</span><span class="s2">(</span><span class="s3">239</span><span class="s2">, </span><span class="s3">68</span><span class="s2">, </span><span class="s3">68</span><span class="s2">));</span>
+
+        <span class="s1">botaoVerDetalhes</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; exibirDetalhesDoItemSelecionado</span><span class="s2">());</span>
+        <span class="s1">botaoRemover</span><span class="s2">.</span><span class="s1">addActionListener</span><span class="s2">(</span><span class="s1">e -&gt; removerItemSelecionadoDaListaAtual</span><span class="s2">());</span>
+
+        <span class="s1">painelGerenciar</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">botaoVerDetalhes</span><span class="s2">);</span>
+        <span class="s1">painelGerenciar</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">botaoRemover</span><span class="s2">);</span>
+
+        <span class="s1">painel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">painelOrdenacao</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">WEST</span><span class="s2">);</span>
+        <span class="s1">painel</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">painelGerenciar</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">EAST</span><span class="s2">);</span>
+        <span class="s0">return </span><span class="s1">painel</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private </span><span class="s1">JTabbedPane criarAbasListas</span><span class="s2">() {</span>
+        <span class="s1">abasCategorias </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JTabbedPane</span><span class="s2">();</span>
+        <span class="s1">abasCategorias</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Font</span><span class="s2">(</span><span class="s4">&quot;Segoe UI&quot;</span><span class="s2">, </span><span class="s1">Font</span><span class="s2">.</span><span class="s1">PLAIN</span><span class="s2">, </span><span class="s3">14</span><span class="s2">));</span>
+
+        <span class="s1">modeloFav </span><span class="s2">= </span><span class="s0">new </span><span class="s1">DefaultListModel</span><span class="s2">&lt;&gt;();</span>
+        <span class="s1">listaFavoritos </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JList</span><span class="s2">&lt;&gt;(</span><span class="s1">modeloFav</span><span class="s2">);</span>
+        <span class="s1">configurarEstiloLista</span><span class="s2">(</span><span class="s1">listaFavoritos</span><span class="s2">);</span>
+
+        <span class="s1">modeloAssis </span><span class="s2">= </span><span class="s0">new </span><span class="s1">DefaultListModel</span><span class="s2">&lt;&gt;();</span>
+        <span class="s1">listaAssistidas </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JList</span><span class="s2">&lt;&gt;(</span><span class="s1">modeloAssis</span><span class="s2">);</span>
+        <span class="s1">configurarEstiloLista</span><span class="s2">(</span><span class="s1">listaAssistidas</span><span class="s2">);</span>
+
+        <span class="s1">modeloQuero </span><span class="s2">= </span><span class="s0">new </span><span class="s1">DefaultListModel</span><span class="s2">&lt;&gt;();</span>
+        <span class="s1">listaQueroAssistir </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JList</span><span class="s2">&lt;&gt;(</span><span class="s1">modeloQuero</span><span class="s2">);</span>
+        <span class="s1">configurarEstiloLista</span><span class="s2">(</span><span class="s1">listaQueroAssistir</span><span class="s2">);</span>
+
+        <span class="s1">abasCategorias</span><span class="s2">.</span><span class="s1">addTab</span><span class="s2">(</span><span class="s4">&quot;Favoritos&quot;</span><span class="s2">, </span><span class="s1">criarScrollLista</span><span class="s2">(</span><span class="s1">listaFavoritos</span><span class="s2">));</span>
+        <span class="s1">abasCategorias</span><span class="s2">.</span><span class="s1">addTab</span><span class="s2">(</span><span class="s4">&quot;Assistidas&quot;</span><span class="s2">, </span><span class="s1">criarScrollLista</span><span class="s2">(</span><span class="s1">listaAssistidas</span><span class="s2">));</span>
+        <span class="s1">abasCategorias</span><span class="s2">.</span><span class="s1">addTab</span><span class="s2">(</span><span class="s4">&quot;Quero Assistir&quot;</span><span class="s2">, </span><span class="s1">criarScrollLista</span><span class="s2">(</span><span class="s1">listaQueroAssistir</span><span class="s2">));</span>
+
+        <span class="s0">return </span><span class="s1">abasCategorias</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">configurarEstiloLista</span><span class="s2">(</span><span class="s1">JList</span><span class="s2">&lt;</span><span class="s1">Serie</span><span class="s2">&gt; </span><span class="s1">lista</span><span class="s2">) {</span>
+        <span class="s1">lista</span><span class="s2">.</span><span class="s1">setCellRenderer</span><span class="s2">(</span><span class="s0">new </span><span class="s1">RenderizadorListaItens</span><span class="s2">());</span>
+        <span class="s1">lista</span><span class="s2">.</span><span class="s1">setSelectionMode</span><span class="s2">(</span><span class="s1">ListSelectionModel</span><span class="s2">.</span><span class="s1">SINGLE_SELECTION</span><span class="s2">);</span>
+        <span class="s1">lista</span><span class="s2">.</span><span class="s1">setFixedCellHeight</span><span class="s2">(</span><span class="s3">64</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private </span><span class="s1">JScrollPane criarScrollLista</span><span class="s2">(</span><span class="s1">JList</span><span class="s2">&lt;</span><span class="s1">Serie</span><span class="s2">&gt; </span><span class="s1">lista</span><span class="s2">) {</span>
+        <span class="s1">JScrollPane scroll </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JScrollPane</span><span class="s2">(</span><span class="s1">lista</span><span class="s2">);</span>
+        <span class="s1">scroll</span><span class="s2">.</span><span class="s1">setBorder</span><span class="s2">(</span><span class="s1">BorderFactory</span><span class="s2">.</span><span class="s1">createLineBorder</span><span class="s2">(</span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_BORDA</span><span class="s2">));</span>
+        <span class="s1">scroll</span><span class="s2">.</span><span class="s1">getViewport</span><span class="s2">().</span><span class="s1">setBackground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+        <span class="s0">return </span><span class="s1">scroll</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private </span><span class="s1">JPanel criarRodapeAcoes</span><span class="s2">() {</span>
+        <span class="s1">JPanel painelRodape </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">(</span><span class="s0">new </span><span class="s1">BorderLayout</span><span class="s2">());</span>
+        <span class="s1">painelRodape</span><span class="s2">.</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+
+        <span class="s1">labelStatus </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">(</span><span class="s4">&quot;Clique em uma série para gerenciar.&quot;</span><span class="s2">);</span>
+        <span class="s1">labelStatus</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Font</span><span class="s2">(</span><span class="s4">&quot;Segoe UI&quot;</span><span class="s2">, </span><span class="s1">Font</span><span class="s2">.</span><span class="s1">PLAIN</span><span class="s2">, </span><span class="s3">13</span><span class="s2">));</span>
+        <span class="s1">labelStatus</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_TEXTO_MUTED</span><span class="s2">);</span>
+        <span class="s1">painelRodape</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">labelStatus</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+        <span class="s0">return </span><span class="s1">painelRodape</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">sincronizarListasInterface</span><span class="s2">() {</span>
+        <span class="s1">modeloFav</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">();</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s1">Serie s </span><span class="s2">: </span><span class="s1">usuarioController</span><span class="s2">.</span><span class="s1">getUsuario</span><span class="s2">().</span><span class="s1">getFavoritos</span><span class="s2">()) </span><span class="s1">modeloFav</span><span class="s2">.</span><span class="s1">addElement</span><span class="s2">(</span><span class="s1">s</span><span class="s2">);</span>
+
+        <span class="s1">modeloAssis</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">();</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s1">Serie s </span><span class="s2">: </span><span class="s1">usuarioController</span><span class="s2">.</span><span class="s1">getUsuario</span><span class="s2">().</span><span class="s1">getAssistidos</span><span class="s2">()) </span><span class="s1">modeloAssis</span><span class="s2">.</span><span class="s1">addElement</span><span class="s2">(</span><span class="s1">s</span><span class="s2">);</span>
+
+        <span class="s1">modeloQuero</span><span class="s2">.</span><span class="s1">clear</span><span class="s2">();</span>
+        <span class="s0">for </span><span class="s2">(</span><span class="s1">Serie s </span><span class="s2">: </span><span class="s1">usuarioController</span><span class="s2">.</span><span class="s1">getUsuario</span><span class="s2">().</span><span class="s1">getQueroAssistir</span><span class="s2">()) </span><span class="s1">modeloQuero</span><span class="s2">.</span><span class="s1">addElement</span><span class="s2">(</span><span class="s1">s</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">dispararOrdenacao</span><span class="s2">(</span><span class="s1">String criterio</span><span class="s2">) {</span>
+        <span class="s0">int </span><span class="s1">indexAba </span><span class="s2">= </span><span class="s1">abasCategorias</span><span class="s2">.</span><span class="s1">getSelectedIndex</span><span class="s2">();</span>
+        <span class="s1">List</span><span class="s2">&lt;</span><span class="s1">Serie</span><span class="s2">&gt; </span><span class="s1">listaAlvo </span><span class="s2">= </span><span class="s0">null</span><span class="s2">;</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">indexAba </span><span class="s2">== </span><span class="s3">0</span><span class="s2">) </span><span class="s1">listaAlvo </span><span class="s2">= </span><span class="s1">usuarioController</span><span class="s2">.</span><span class="s1">getUsuario</span><span class="s2">().</span><span class="s1">getFavoritos</span><span class="s2">();</span>
+        <span class="s0">else if </span><span class="s2">(</span><span class="s1">indexAba </span><span class="s2">== </span><span class="s3">1</span><span class="s2">) </span><span class="s1">listaAlvo </span><span class="s2">= </span><span class="s1">usuarioController</span><span class="s2">.</span><span class="s1">getUsuario</span><span class="s2">().</span><span class="s1">getAssistidos</span><span class="s2">();</span>
+        <span class="s0">else if </span><span class="s2">(</span><span class="s1">indexAba </span><span class="s2">== </span><span class="s3">2</span><span class="s2">) </span><span class="s1">listaAlvo </span><span class="s2">= </span><span class="s1">usuarioController</span><span class="s2">.</span><span class="s1">getUsuario</span><span class="s2">().</span><span class="s1">getQueroAssistir</span><span class="s2">();</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">listaAlvo </span><span class="s2">== </span><span class="s0">null </span><span class="s2">|| </span><span class="s1">listaAlvo</span><span class="s2">.</span><span class="s1">isEmpty</span><span class="s2">()) {</span>
+            <span class="s1">labelStatus</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s4">&quot;Aviso: A lista atual está vazia.&quot;</span><span class="s2">);</span>
+            <span class="s0">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s0">switch </span><span class="s2">(</span><span class="s1">criterio</span><span class="s2">) {</span>
+            <span class="s0">case </span><span class="s4">&quot;nome&quot;</span><span class="s2">: </span><span class="s1">usuarioController</span><span class="s2">.</span><span class="s1">ordenarListaPorNome</span><span class="s2">(</span><span class="s1">listaAlvo</span><span class="s2">); </span><span class="s0">break</span><span class="s2">;</span>
+            <span class="s0">case </span><span class="s4">&quot;nota&quot;</span><span class="s2">: </span><span class="s1">usuarioController</span><span class="s2">.</span><span class="s1">ordenarListaPorNota</span><span class="s2">(</span><span class="s1">listaAlvo</span><span class="s2">); </span><span class="s0">break</span><span class="s2">;</span>
+            <span class="s0">case </span><span class="s4">&quot;status&quot;</span><span class="s2">: </span><span class="s1">usuarioController</span><span class="s2">.</span><span class="s1">ordenarListaPorStatus</span><span class="s2">(</span><span class="s1">listaAlvo</span><span class="s2">); </span><span class="s0">break</span><span class="s2">;</span>
+            <span class="s0">case </span><span class="s4">&quot;data&quot;</span><span class="s2">: </span><span class="s1">usuarioController</span><span class="s2">.</span><span class="s1">ordenarListaPorDataEstreia</span><span class="s2">(</span><span class="s1">listaAlvo</span><span class="s2">); </span><span class="s0">break</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s1">sincronizarListasInterface</span><span class="s2">();</span>
+        <span class="s1">labelStatus</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s4">&quot;Lista ordenada com sucesso por: &quot; </span><span class="s2">+ </span><span class="s1">criterio</span><span class="s2">.</span><span class="s1">toUpperCase</span><span class="s2">() + </span><span class="s4">&quot;.&quot;</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">exibirDetalhesDoItemSelecionado</span><span class="s2">() {</span>
+        <span class="s1">Serie selecionada </span><span class="s2">= </span><span class="s1">obterSerieSelecionadaAbaAtual</span><span class="s2">();</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">selecionada </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s1">labelStatus</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s4">&quot;Por favor, selecione uma série na lista.&quot;</span><span class="s2">);</span>
+            <span class="s0">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+        <span class="s1">DetalhesSerieDialog</span><span class="s2">.</span><span class="s1">exibir</span><span class="s2">(</span><span class="s0">this</span><span class="s2">, </span><span class="s1">selecionada</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">removerItemSelecionadoDaListaAtual</span><span class="s2">() {</span>
+        <span class="s0">int </span><span class="s1">aba </span><span class="s2">= </span><span class="s1">abasCategorias</span><span class="s2">.</span><span class="s1">getSelectedIndex</span><span class="s2">();</span>
+        <span class="s1">Serie selecionada </span><span class="s2">= </span><span class="s1">obterSerieSelecionadaAbaAtual</span><span class="s2">();</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">selecionada </span><span class="s2">== </span><span class="s0">null</span><span class="s2">) {</span>
+            <span class="s1">labelStatus</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s4">&quot;Selecione um item para remover.&quot;</span><span class="s2">);</span>
+            <span class="s0">return</span><span class="s2">;</span>
+        <span class="s2">}</span>
+
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">aba </span><span class="s2">== </span><span class="s3">0</span><span class="s2">) </span><span class="s1">usuarioController</span><span class="s2">.</span><span class="s1">desfavoritarSerie</span><span class="s2">(</span><span class="s1">selecionada</span><span class="s2">);</span>
+        <span class="s0">else if </span><span class="s2">(</span><span class="s1">aba </span><span class="s2">== </span><span class="s3">1</span><span class="s2">) </span><span class="s1">usuarioController</span><span class="s2">.</span><span class="s1">removerDeAssistidas</span><span class="s2">(</span><span class="s1">selecionada</span><span class="s2">);</span>
+        <span class="s0">else if </span><span class="s2">(</span><span class="s1">aba </span><span class="s2">== </span><span class="s3">2</span><span class="s2">) </span><span class="s1">usuarioController</span><span class="s2">.</span><span class="s1">removerListaQueroAssistir</span><span class="s2">(</span><span class="s1">selecionada</span><span class="s2">);</span>
+
+        <span class="s1">sincronizarListasInterface</span><span class="s2">();</span>
+        <span class="s1">labelStatus</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s4">&quot;Série '&quot; </span><span class="s2">+ </span><span class="s1">selecionada</span><span class="s2">.</span><span class="s1">getNome</span><span class="s2">() + </span><span class="s4">&quot;' removida.&quot;</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private </span><span class="s1">Serie obterSerieSelecionadaAbaAtual</span><span class="s2">() {</span>
+        <span class="s0">int </span><span class="s1">aba </span><span class="s2">= </span><span class="s1">abasCategorias</span><span class="s2">.</span><span class="s1">getSelectedIndex</span><span class="s2">();</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">aba </span><span class="s2">== </span><span class="s3">0</span><span class="s2">) </span><span class="s0">return </span><span class="s1">listaFavoritos</span><span class="s2">.</span><span class="s1">getSelectedValue</span><span class="s2">();</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">aba </span><span class="s2">== </span><span class="s3">1</span><span class="s2">) </span><span class="s0">return </span><span class="s1">listaAssistidas</span><span class="s2">.</span><span class="s1">getSelectedValue</span><span class="s2">();</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">aba </span><span class="s2">== </span><span class="s3">2</span><span class="s2">) </span><span class="s0">return </span><span class="s1">listaQueroAssistir</span><span class="s2">.</span><span class="s1">getSelectedValue</span><span class="s2">();</span>
+        <span class="s0">return null</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private void </span><span class="s1">voltarAoMenuPrincipal</span><span class="s2">() {</span>
+        <span class="s1">TelaPrincipal p </span><span class="s2">= </span><span class="s0">new </span><span class="s1">TelaPrincipal</span><span class="s2">(</span><span class="s1">usuarioController</span><span class="s2">);</span>
+        <span class="s1">p</span><span class="s2">.</span><span class="s1">setVisible</span><span class="s2">(</span><span class="s0">true</span><span class="s2">);</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">dispose</span><span class="s2">();</span>
+    <span class="s2">}</span>
+
+    <span class="s0">private static class </span><span class="s1">RenderizadorListaItens </span><span class="s0">extends </span><span class="s1">JPanel </span><span class="s0">implements </span><span class="s1">ListCellRenderer</span><span class="s2">&lt;</span><span class="s1">Serie</span><span class="s2">&gt; {</span>
+        <span class="s0">private final </span><span class="s1">JLabel titulo </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">();</span>
+        <span class="s0">private final </span><span class="s1">JLabel meta </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">();</span>
+        <span class="s0">private final </span><span class="s1">JLabel indicador </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JLabel</span><span class="s2">();</span>
+
+        <span class="s0">public </span><span class="s1">RenderizadorListaItens</span><span class="s2">() {</span>
+            <span class="s1">setLayout</span><span class="s2">(</span><span class="s0">new </span><span class="s1">BorderLayout</span><span class="s2">(</span><span class="s3">12</span><span class="s2">, </span><span class="s3">0</span><span class="s2">));</span>
+            <span class="s1">setBorder</span><span class="s2">(</span><span class="s1">BorderFactory</span><span class="s2">.</span><span class="s1">createEmptyBorder</span><span class="s2">(</span><span class="s3">8</span><span class="s2">, </span><span class="s3">16</span><span class="s2">, </span><span class="s3">8</span><span class="s2">, </span><span class="s3">16</span><span class="s2">));</span>
+
+            <span class="s1">JPanel textos </span><span class="s2">= </span><span class="s0">new </span><span class="s1">JPanel</span><span class="s2">();</span>
+            <span class="s1">textos</span><span class="s2">.</span><span class="s1">setOpaque</span><span class="s2">(</span><span class="s0">false</span><span class="s2">);</span>
+            <span class="s1">textos</span><span class="s2">.</span><span class="s1">setLayout</span><span class="s2">(</span><span class="s0">new </span><span class="s1">BoxLayout</span><span class="s2">(</span><span class="s1">textos</span><span class="s2">, </span><span class="s1">BoxLayout</span><span class="s2">.</span><span class="s1">Y_AXIS</span><span class="s2">));</span>
+
+            <span class="s1">titulo</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Font</span><span class="s2">(</span><span class="s4">&quot;Segoe UI&quot;</span><span class="s2">, </span><span class="s1">Font</span><span class="s2">.</span><span class="s1">BOLD</span><span class="s2">, </span><span class="s3">14</span><span class="s2">));</span>
+            <span class="s1">meta</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Font</span><span class="s2">(</span><span class="s4">&quot;Segoe UI&quot;</span><span class="s2">, </span><span class="s1">Font</span><span class="s2">.</span><span class="s1">PLAIN</span><span class="s2">, </span><span class="s3">12</span><span class="s2">));</span>
+            <span class="s1">indicador</span><span class="s2">.</span><span class="s1">setFont</span><span class="s2">(</span><span class="s0">new </span><span class="s1">Font</span><span class="s2">(</span><span class="s4">&quot;Segoe UI&quot;</span><span class="s2">, </span><span class="s1">Font</span><span class="s2">.</span><span class="s1">BOLD</span><span class="s2">, </span><span class="s3">13</span><span class="s2">));</span>
+
+            <span class="s1">textos</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">titulo</span><span class="s2">);</span>
+            <span class="s1">textos</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">Box</span><span class="s2">.</span><span class="s1">createVerticalStrut</span><span class="s2">(</span><span class="s3">3</span><span class="s2">));</span>
+            <span class="s1">textos</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">meta</span><span class="s2">);</span>
+
+            <span class="s1">add</span><span class="s2">(</span><span class="s1">textos</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">CENTER</span><span class="s2">);</span>
+            <span class="s1">add</span><span class="s2">(</span><span class="s1">indicador</span><span class="s2">, </span><span class="s1">BorderLayout</span><span class="s2">.</span><span class="s1">EAST</span><span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s1">@Override</span>
+        <span class="s0">public </span><span class="s1">Component getListCellRendererComponent</span><span class="s2">(</span><span class="s1">JList</span><span class="s2">&lt;? </span><span class="s0">extends </span><span class="s1">Serie</span><span class="s2">&gt; </span><span class="s1">list</span><span class="s2">, </span><span class="s1">Serie serie</span><span class="s2">, </span><span class="s0">int </span><span class="s1">index</span><span class="s2">, </span><span class="s0">boolean </span><span class="s1">isSelected</span><span class="s2">, </span><span class="s0">boolean </span><span class="s1">cellHasFocus</span><span class="s2">) {</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">serie </span><span class="s2">!= </span><span class="s0">null</span><span class="s2">) {</span>
+                <span class="s1">titulo</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s1">serie</span><span class="s2">.</span><span class="s1">getNome</span><span class="s2">());</span>
+                <span class="s1">String generos </span><span class="s2">= (</span><span class="s1">serie</span><span class="s2">.</span><span class="s1">getGeneros</span><span class="s2">() == </span><span class="s0">null </span><span class="s2">|| </span><span class="s1">serie</span><span class="s2">.</span><span class="s1">getGeneros</span><span class="s2">().</span><span class="s1">isBlank</span><span class="s2">()) ? </span><span class="s4">&quot;Não Informado&quot; </span><span class="s2">: </span><span class="s1">serie</span><span class="s2">.</span><span class="s1">getGeneros</span><span class="s2">();</span>
+                <span class="s1">meta</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s1">generos </span><span class="s2">+ </span><span class="s4">&quot;  •  &quot; </span><span class="s2">+ </span><span class="s1">serie</span><span class="s2">.</span><span class="s1">getStatus</span><span class="s2">());</span>
+                <span class="s1">indicador</span><span class="s2">.</span><span class="s1">setText</span><span class="s2">(</span><span class="s1">String</span><span class="s2">.</span><span class="s1">format</span><span class="s2">(</span><span class="s4">&quot;%.1f ★&quot;</span><span class="s2">, </span><span class="s1">serie</span><span class="s2">.</span><span class="s1">getNota</span><span class="s2">()));</span>
+            <span class="s2">}</span>
+
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">isSelected</span><span class="s2">) {</span>
+                <span class="s1">setBackground</span><span class="s2">(</span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_SUAVE</span><span class="s2">);</span>
+                <span class="s1">titulo</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_DESTAQUE</span><span class="s2">);</span>
+                <span class="s1">meta</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_TEXTO_MAIN</span><span class="s2">);</span>
+                <span class="s1">indicador</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_DESTAQUE</span><span class="s2">);</span>
+            <span class="s2">} </span><span class="s0">else </span><span class="s2">{</span>
+                <span class="s1">setBackground</span><span class="s2">(</span><span class="s1">Color</span><span class="s2">.</span><span class="s1">WHITE</span><span class="s2">);</span>
+                <span class="s1">titulo</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_TEXTO_MAIN</span><span class="s2">);</span>
+                <span class="s1">meta</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_TEXTO_MUTED</span><span class="s2">);</span>
+                <span class="s1">indicador</span><span class="s2">.</span><span class="s1">setForeground</span><span class="s2">(</span><span class="s1">TelaPrincipal</span><span class="s2">.</span><span class="s1">COR_TEXTO_MUTED</span><span class="s2">);</span>
+            <span class="s2">}</span>
+            <span class="s0">return this</span><span class="s2">;</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+<span class="s2">}</span></pre>
+</body>
+</html>
